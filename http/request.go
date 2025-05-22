@@ -47,7 +47,7 @@ func (r *Request) SetHost(host string) {
 }
 
 // CalculateContentLength calculate body and set right Content-Length header, remove unnecessary content-length.
-func (r *Request) CalculateContentLength() {
+func (r *Request) CalculateContentLength() int {
 	foundContentLength := false
 	bodyLength := len(r.Body)
 	for k, v := range r.Headers {
@@ -69,6 +69,8 @@ func (r *Request) CalculateContentLength() {
 	if !foundContentLength && bodyLength > 0 {
 		r.AddHeader("Content-Length", fmt.Sprintf("%d", bodyLength))
 	}
+
+	return bodyLength
 }
 
 // GetHeaders get all key's value

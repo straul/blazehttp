@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func Connect(addr string, isHttps bool, timeout int) *net.Conn {
+func Connect(addr string, isHttps bool, timeout int) (*net.Conn, error) {
 	var n net.Conn
 	var err error
 	if m, _ := regexp.MatchString(`.*(]:)|(:)[0-9]+$`, addr); !m {
@@ -30,7 +30,7 @@ retry:
 		if retryCnt < 4 {
 			goto retry
 		} else {
-			return nil
+			return nil, err
 		}
 	}
 	wDeadline := time.Now().Add(time.Duration(timeout) * time.Millisecond)
@@ -40,5 +40,5 @@ retry:
 	_ = n.SetReadDeadline(rDeadline)
 	_ = n.SetWriteDeadline(wDeadline)
 
-	return &n
+	return &n, nil
 }
